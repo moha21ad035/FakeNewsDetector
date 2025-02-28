@@ -7,18 +7,52 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <div class="container">
+<div class="container">
+    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
         <h1>Fake News Detection</h1>
+        
+
         <form action="/predict" method="POST">
-            <textarea name="article" placeholder="Enter your news article here..."></textarea>
+            <textarea id="articleInput" name="article" placeholder="Enter your news article here..."></textarea>
             <br>
             <button type="submit">Check</button>
         </form>
         {% if prediction %}
-        <div class="result">
-            {{ prediction }}
-        </div>
+        <div id="result" class="result {{ prediction_class }}">{{ prediction }}</div>
+        <button id="refreshBtn">Refresh</button>
+
+
         {% endif %}
+        
     </div>
+    {% if ai_explanation %}
+<div id="ai_explanation" class="explanation">
+    <h3>AI Explanation:</h3>
+    <p>{{ ai_explanation }}</p>
+</div>
+{% endif %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let resultDiv = document.getElementById("result");
+            if (resultDiv.classList.contains("real")) {
+                document.body.style.backgroundColor = "#d4edda"; // Light green
+            } else if (resultDiv.classList.contains("fake")) {
+                document.body.style.backgroundColor = "#f8d7da"; // Light red
+            }
+        });
+
+        document.getElementById("refreshBtn").addEventListener("click", function() {
+        document.getElementById("articleInput").value = "";  // Clear text area
+        document.getElementById("result").innerHTML = "";   // Clear result text
+        document.getElementById("result").className = "result";  // Remove color classes
+        document.body.style.backgroundColor = "#f4f4f9";  // Reset background color
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", function() {
+        window.location.href = "/"; // Redirects back to the home page
+    });
+    </script>
+    
 </body>
 </html>
