@@ -35,7 +35,10 @@ def get_ai_explanation(article):
     response = requests.post(url, headers=headers, json=data)
 
     if response.status_code == 200:
-        return response.json()[0]['generated_text']
+       generated_text = response.json()[0]['generated_text']
+
+       cleaned_text = " ".join(generated_text.split()[14:])
+       return cleaned_text
     else:
         return "Error: Unable to generate explanation."
 
